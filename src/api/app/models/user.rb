@@ -1282,6 +1282,19 @@ class User < ActiveRecord::Base
     return Package.where(id: packages).where("db_project_id not in (?)", projects)
   end
 
+  def self.create_from_ldap_info(username, user_ldap_info)
+    fakepw = PasswordGenerator.generate_random_password
+    user = User.create(:login => username, :password => fakepw, :password_confirmation => fakepw, :email => ldap_info[0]) do |new_user|
+      new_user.realname = ldap_info[1],
+      new_user.state = CONFIG['new_user_registration'] == 'confirmation' ? User.states['unconfirmed'] : User.states['confirmed']
+      new_user.adminnote = "User created via LDAP"
+    end
+
+    user.roles << Role.find_by_title("User") if user
+
+    user
+  end
+
   protected
   # This method allows to execute a block while deactivating timestamp
   # updating.
