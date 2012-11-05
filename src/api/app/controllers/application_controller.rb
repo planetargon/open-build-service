@@ -219,7 +219,7 @@ class ApplicationController < ActionController::API
       # FIXME: we should allow NULL passwords in DB, but that needs user management cleanup
       fakepw = PasswordGenerator.generate_random_password
       @http_user = User.create(
-        :login => proxy_user,
+        :login => auth_engine.user_login,
         :password => fakepw,
         :password_confirmation => fakepw,
         :state => state
