@@ -6,6 +6,7 @@ SimpleCov.start 'rails' if ENV["DO_COVERAGE"]
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/unit'
+require 'mocha'
 
 # uncomment to enable tests which currently are known to fail, but where either the test
 # or the code has to be fixed
