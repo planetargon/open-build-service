@@ -53,7 +53,7 @@ download_url: http://localhost:82/
 proxy_auth_mode: :off
 
 # ATTENTION: If proxy_auth_mode'is :on, the frontend takes the user
-# name that is coming as headervalue X-username as a 
+# name that is coming as headervalue X-username as a
 # valid user does no further authentication. So take care...
 proxy_auth_test_user: coolguy
 
@@ -68,7 +68,7 @@ yml_url: http://software.opensuse.org/ymp
 
 ldap_mode: :off
 
-# Sam Account Name is the login name for LDAP 
+# Sam Account Name is the login name for LDAP
 ldap_search_attr: sAMAccountName
 
 # OVERRIDE with your company's ldap search base for the users who will use OBS
@@ -90,7 +90,7 @@ ldap_user_memberof_attr: memberof
 # The attribute the group member is stored in
 ldap_group_member_attr: member
 
-# If you're using CONFIG['ldap_authenticate']=:ldap then you should ensure that 
+# If you're using CONFIG['ldap_authenticate']=:ldap then you should ensure that
 # ldaps is used to transfer the credentials over SSL or use the StartTLS extension
 ldap_ssl: :on
 
@@ -124,3 +124,8 @@ ldap_start_tls: :off
 #errbit_api_key: api_key_of_your_app
 #errbit_host: installation.of.errbit.com
 
+# Crowd Authentication settings
+# crowd_authentication: :on
+# crowd_server: 192.168.1.1
+# crowd_app_name: 'obs-api'
+# crowd_app_password: 'password_here'
