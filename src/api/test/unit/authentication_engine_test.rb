@@ -6,6 +6,16 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
     @environment = {}
   end
 
+  def test_crowd_engine_set_to_on
+    @config['crowd_authentication'] = :on
+    @config['crowd_server'] = '192.168.1.1'
+    @config['crowd_app_name'] = 'obs-api'
+    @config['crowd_app_password'] = 'password'
+
+    auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
+    assert_equal "Opensuse::Authentication::CrowdEngine", auth_engine.engine.class.to_s
+  end
+
   def test_ichain_engine_set_to_on
     @config['ichain_mode'] = :on
 
