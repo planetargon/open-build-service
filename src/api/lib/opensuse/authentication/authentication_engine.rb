@@ -19,17 +19,22 @@ module Opensuse
 
       private
         def determine_engine
-          if configuration['crowd_authentication'] == :on && configuration['crowd_server'] && configuration['crowd_app_name'] && configuration['crowd_app_password']
+          if configuration['crowd_authentication'] == :on && configuration['crowd_server'] && configuration['crowd_app_name'] && configuration['crowd_app_password'] &&
+            environment_contains_valid_headers?
             Opensuse::Authentication::CrowdEngine.new(configuration, environment)
           elsif [:on, :simulate].include?([configuration['ichain_mode'], configuration['proxy_auth_mode']].compact.uniq.last)
             Opensuse::Authentication::IchainEngine.new(configuration, environment)
-          elsif ["X-HTTP-Authorization", "Authorization", "HTTP_AUTHORIZATION"].any? { |header| environment.keys.include?(header) } && configuration['allow_anonymous']
+          elsif environment_contains_valid_headers? && configuration['allow_anonymous']
             Opensuse::Authentication::HttpBasicEngine.new(configuration, environment)
-          elsif ["X-HTTP-Authorization", "Authorization", "HTTP_AUTHORIZATION"].any? { |header| environment.keys.include?(header) } && configuration['ldap_mode'] == :on
+          elsif environment_contains_valid_headers? && configuration['ldap_mode'] == :on
             Opensuse::Authentication::LdapEngine.new(configuration, environment)
-          elsif ["X-HTTP-Authorization", "Authorization", "HTTP_AUTHORIZATION"].any? { |header| environment.keys.include?(header) }
+          elsif environment_contains_valid_headers?
             Opensuse::Authentication::CredentialsEngine.new(configuration, environment)
           end
+        end
+
+        def environment_contains_valid_headers?
+          ["X-HTTP-Authorization", "Authorization", "HTTP_AUTHORIZATION"].any? { |header| environment.keys.include?(header) }
         end
     end
   end
