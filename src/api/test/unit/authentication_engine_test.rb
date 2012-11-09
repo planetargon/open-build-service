@@ -12,6 +12,8 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
     @config['crowd_app_name'] = 'obs-api'
     @config['crowd_app_password'] = 'password'
 
+    @environment['Authorization'] = 'Joe'
+
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
     assert_equal "Opensuse::Authentication::CrowdEngine", auth_engine.engine.class.to_s
   end
