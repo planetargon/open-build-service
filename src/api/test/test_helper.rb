@@ -6,7 +6,7 @@ SimpleCov.start 'rails' if ENV["DO_COVERAGE"]
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/unit'
-require 'mocha'
+require 'mocha/setup'
 
 require 'webmock/minitest'
 
@@ -101,12 +101,12 @@ module ActionController
       re = 'Basic ' + Base64.encode64( user + ':' + passwd )
       @@auth = re
     end
-  
+
     # will provide a user without special permissions
-    def prepare_request_valid_user 
+    def prepare_request_valid_user
       prepare_request_with_user 'tom', 'thunder'
     end
-  
+
     def prepare_request_invalid_user
       prepare_request_with_user 'tom123', 'thunder123'
     end
@@ -172,7 +172,7 @@ module ActionController
       end
     end
 
-  end 
+  end
 end
 
 class ActiveSupport::TestCase
