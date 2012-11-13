@@ -19,21 +19,23 @@ module Opensuse
 
         user = nil
 
-        if authorization && authorization[0] == "Basic"
-          login, password = Base64.decode64(authorization[1]).split(':', 2)[0..1]
-
-          @user_login = login
-
+        if configuration['allow_anonymous']
           read_only_hosts = Array(configuration['read_only_hosts']) || []
           read_only_hosts << configuration['webui_host'] if configuration['webui_host'] # This was used in config files until OBS 2.1
 
           if read_only_hosts.include?(environment['REMOTE_HOST']) || read_only_hosts.include?(environment['REMOTE_ADDR'])
             if environment['HTTP_USER_AGENT'] && environment['HTTP_USER_AGENT'].match(/^(obs-webui|obs-software)/)
-             user = User.find_by_login("_nobody_")
+             return user = User.find_by_login("_nobody_")
             end
           else
             logger.send :error, "Anonymous configured, but #{read_only_hosts.inspect} does not include '#{environment['REMOTE_HOST']} '#{environment['REMOTE_ADDR']}'}'"
           end
+        end
+
+        if authorization && authorization[0] == "Basic"
+          login, password = Base64.decode64(authorization[1]).split(':', 2)[0..1]
+
+          @user_login = login
 
           user = User.find_with_credentials(login, password)
 
