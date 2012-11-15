@@ -42,6 +42,11 @@ module Suse
       ldap_mode.nil? ? false : ldap_mode.value
     end
 
+    def self.group_member_of_validation?
+      group_member_of_validation = ApplicationSettings::LdapGroupMemberOfValidation.first
+      group_member_of_validation.nil? ? false : group_member_of_validation.value
+    end
+
     # Populates db-based config model with LDAP details from config file
     def self.migrate_config_file_to_application_settings!
       ApplicationSettings::LdapMode.init(CONFIG['ldap_mode'] == :on)
