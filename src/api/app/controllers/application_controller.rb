@@ -89,7 +89,7 @@ class ApplicationController < ActionController::API
   def extract_user
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(CONFIG, request.env)
 
-    return false unless auth_engine.engine
+    render_error( :message => "Unknown user or invalid password", :status => 401 ) and return false unless auth_engine.engine
 
     @http_user, message = auth_engine.authenticate
 
