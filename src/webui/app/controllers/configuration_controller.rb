@@ -56,7 +56,7 @@ class ConfigurationController < ApplicationController
       ActiveXML::transport.direct_http(URI('/configuration'), :method => 'PUT', :data => data)
       flash[:note] = "Updated configuration"
       Rails.cache.delete('configuration')
-    rescue ActiveXML::Transport::Error 
+    rescue ActiveXML::Transport::Error
       logger.debug "Failed to update configuration"
       flash[:error] = "Failed to update configuration"
     end
