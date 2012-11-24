@@ -37,14 +37,34 @@ module Suse
     # group_title_attribute - The attribute the group name is stored in
 
     def self.enabled?
-      # This should replace all current application references to -- if defined?( CONFIG['ldap_mode'] ) && CONFIG['ldap_mode'] == :on
-      ldap_mode = ApplicationSettings::LdapMode.first
-      ldap_mode.nil? ? false : ldap_mode.value
+      # TODO This should replace all current application references to -- if defined?( CONFIG['ldap_mode'] ) && CONFIG['ldap_mode'] == :on
+      # LDAP mode enabled? All other LDAP options rely upon this.
+      ApplicationSettings::LdapMode.get.value
     end
 
     def self.group_member_of_validation?
-      group_member_of_validation = ApplicationSettings::LdapGroupMemberOfValidation.first
-      group_member_of_validation.nil? ? false : group_member_of_validation.value
+      # If enabled, a user can only access groups that they are a memberOf on the LDAP server
+      ApplicationSettings::LdapGroupMemberOfValidation.get.value
+    end
+
+    def self.search_user
+      # Credentials to use to search LDAP for the username
+      ApplicationSettings::LdapSearchUser.get.value
+    end
+
+    def self.search_auth
+      # Credentials to use to search LDAP for the username
+      ApplicationSettings::LdapSearchAuth.get.value
+    end
+
+    def self.search_base
+      # LDAP search base for the users who will use OBS
+      ApplicationSettings::LdapSearchBase.get.value
+    end
+
+    def self.member_of_attribute
+      # The attribute the user memberOf is stored in
+      ApplicationSettings::LdapMemberOfAttribute.get.value
     end
 
     # Populates db-based config model with LDAP details from config file
