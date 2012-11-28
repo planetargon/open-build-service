@@ -553,8 +553,12 @@ CREATE TABLE `reviews` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `bs_request_id` (`bs_request_id`),
+  KEY `index_reviews_on_creator` (`creator`),
+  KEY `index_reviews_on_reviewer` (`reviewer`),
+  KEY `index_reviews_on_state` (`state`),
+  KEY `index_reviews_on_by_user` (`by_user`),
   KEY `index_reviews_on_by_group` (`by_group`),
+  KEY `index_reviews_on_by_project` (`by_project`),
   KEY `index_reviews_on_by_package_and_by_project` (`by_package`,`by_project`),
   KEY `bs_request_id` (`bs_request_id`),
   KEY `index_reviews_on_state_and_by_project` (`state`,`by_project`),
@@ -1012,11 +1016,11 @@ INSERT INTO schema_migrations (version) VALUES ('20121120110642');
 
 INSERT INTO schema_migrations (version) VALUES ('20121120124300');
 
+INSERT INTO schema_migrations (version) VALUES ('20121120155310');
+
 INSERT INTO schema_migrations (version) VALUES ('20121121142111');
 
 INSERT INTO schema_migrations (version) VALUES ('20121124032111');
-
-INSERT INTO schema_migrations (version) VALUES ('20121120155310');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
