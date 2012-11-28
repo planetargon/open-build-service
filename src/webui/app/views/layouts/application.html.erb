@@ -25,13 +25,7 @@
       $(function() {
         <%= yield :ready_function %>
         <% if CONFIG['theme'] == 'bento' %>
-<<<<<<< HEAD
-          callPiwik();  
-=======
           callPiwik();
-        <% else %>
-          setup_favorites();
->>>>>>> [webui] Whitespace changes
         <% end %>
       });
     <% end %>
