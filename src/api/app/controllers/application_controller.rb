@@ -307,7 +307,7 @@ class ApplicationController < ActionController::API
     backend_http.read_timeout = 1000
 
     # we have to be careful with object life cycle. the actual data is
-    # deleted once the tempfile is garbage collected, but isn't kept alive 
+    # deleted once the tempfile is garbage collected, but isn't kept alive
     # as the send_file function only references the path to it. So we keep it
     # for ourselves. And once the controller is garbage collected, it should
     # be fine to unlink the data
@@ -343,6 +343,8 @@ class ApplicationController < ActionController::API
   end
 
   def pass_to_backend( path = nil )
+    puts "IN PASS TO BACKEND METHOD"
+
 
     unless path
       path = request.path
@@ -352,6 +354,8 @@ class ApplicationController < ActionController::API
         path = path + '?' + request.env["rack.request.form_vars"]
       end
     end
+
+    puts "PATH #{path.inspect}"
 
     case request.method.to_s.downcase
     when "get"
@@ -363,7 +367,9 @@ class ApplicationController < ActionController::API
       file.close!
     when "put"
       file = download_request
+      puts "DOWNLOAD REQUEST #{download_request.inspect}"
       response = Suse::Backend.put( path, file )
+      puts "RESPONSE FROM SUSE BACKEND #{response.inspect}"
       file.close!
     when "delete"
       response = Suse::Backend.delete( path )

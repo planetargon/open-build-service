@@ -35,6 +35,7 @@ module ActionController
     class Session
       def add_auth(headers)
         headers = Hash.new if headers.nil?
+        headers['test_info'] = IntegrationTest.test_info
         if !headers.has_key? "HTTP_AUTHORIZATION" and IntegrationTest.basic_auth
           headers["HTTP_AUTHORIZATION"] = IntegrationTest.basic_auth
         end
@@ -77,8 +78,22 @@ module ActionController
     def teardown
       Rails.cache.clear
     end
-    
+
     @@auth = nil
+
+    @@test_info = nil
+
+    def self.test_info
+      return @@test_info
+    end
+
+    def test_info
+      return @@test_info
+    end
+
+    def reset_test_info
+      @@test_info = nil
+    end
 
     def reset_auth
       @@auth = nil
@@ -90,6 +105,10 @@ module ActionController
 
     def basic_auth
       return @@auth
+    end
+
+    def set_test(options = {})
+      @@test_info = options
     end
 
     def prepare_request_with_user( user, passwd )

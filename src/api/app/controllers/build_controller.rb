@@ -28,7 +28,10 @@ class BuildController < ApplicationController
   def project_index
     valid_http_methods :get, :post, :put
 
-    puts "METHOD PROJECT INDEX"
+    if request.env['test_info']
+      puts "TEST INFO #{request.env['test_info'].inspect}"
+      puts "METHOD PROJECT INDEX"
+    end
 
     prj = nil
     unless params[:project] == "_dispatchprios"
@@ -99,8 +102,20 @@ class BuildController < ApplicationController
       pass_to_backend
       return
     elsif request.put?
+      if request.env["test_info"].inspect
+        puts "IN ELSE IF FOR PUT REQUEST"
+      end
+
       if @http_user.is_admin?
-        pass_to_backend
+        if request.env["test_info"].inspect
+          puts "HTTP USER IS AN ADMIN"
+        end
+
+        begin
+          pass_to_backend
+        rescue Exception => e
+          puts "AN EXCEPTION OCCURRED. THE ERROR IS #{e.inspect}"
+        end
       else
         render_error :status => 403, :errorcode => "execute_cmd_no_permission",
           :message => "No permission to execute command on project #{params[:project]}"
