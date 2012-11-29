@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + "/..") + "/test_helper"
 require 'rexml/document'
 include REXML
 
-class BuildControllerTest < ActionController::IntegrationTest 
+class BuildControllerTest < ActionController::IntegrationTest
 
   fixtures :all
 
@@ -83,6 +83,7 @@ class BuildControllerTest < ActionController::IntegrationTest
 
     prepare_request_with_user "king", "sunflower"
     put "/build/_dispatchprios", ' <dispatchprios> <prio project="KDE:Distro:Factory" repository="openSUSE_Factory" adjust="7" /> </dispatchprios>'
+    puts "LAST RESPONSE #{last_response.body}"
     assert_response :success
   end
 
@@ -134,7 +135,7 @@ class BuildControllerTest < ActionController::IntegrationTest
 
   def test_read_access_hidden_project_index
     # Test if hidden projects appear for the right users
-    # testing build_controller project_index 
+    # testing build_controller project_index
     # currently this test shows that there's an information leak.
     get "/build"
     assert_response :success
@@ -189,7 +190,7 @@ class BuildControllerTest < ActionController::IntegrationTest
 #   schedulerjob.elements.each do |jobnode|
 #     puts "test", jobnode.inspect
 #   end
-    
+
   end
 
   def test_builddepinfo
@@ -200,7 +201,7 @@ class BuildControllerTest < ActionController::IntegrationTest
 
     get "/build/HiddenProject/nada/i586/_builddepinfo"
     assert_response 404
-    assert_xml_tag( :tag => "status", :attributes => { :code => "unknown_project" } ) 
+    assert_xml_tag( :tag => "status", :attributes => { :code => "unknown_project" } )
 
     prepare_request_with_user "adrian", "so_alone"
     get "/build/HiddenProject/nada/i586/_builddepinfo"
@@ -216,7 +217,7 @@ class BuildControllerTest < ActionController::IntegrationTest
   def test_package_index
     get "/build/home:Iggy/10.2/i586/TestPack"
     assert_response :success
-    assert_xml_tag( :tag => "binarylist" ) 
+    assert_xml_tag( :tag => "binarylist" )
   end
 
   def test_read_access_hidden_package_index
@@ -227,7 +228,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     prepare_request_with_user "adrian", "so_alone"
     get "/build/HiddenProject/nada/i586/pack"
     assert_response :success
-    assert_xml_tag( :tag => "binarylist" ) 
+    assert_xml_tag( :tag => "binarylist" )
     prepare_request_valid_user
   end
 
@@ -243,7 +244,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     prepare_request_valid_user
     get "/build/SourceprotectedProject/repo/i586/pack/_log"
     assert_response 403
-    assert_xml_tag( :tag => "status", :attributes => { :code => "source_access_no_permission" } ) 
+    assert_xml_tag( :tag => "status", :attributes => { :code => "source_access_no_permission" } )
     # retry with maintainer
     prepare_request_with_user "sourceaccess_homer", "homer"
     get "/build/SourceprotectedProject/repo/i586/pack/_log"
@@ -313,7 +314,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     assert_response :success
     #FIXME validate xml content
   end
-  
+
   def test_read_access_hidden_binary_view
     # 404 on invalid
     get "/build/HiddenProject/nada/i586/pack/package?view=fileinfo"
@@ -398,7 +399,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     assert_response 400
     assert_match(/unsupported POST command/, @response.body)
 
-    prepare_request_with_user "Iggy", "asdfasdf" 
+    prepare_request_with_user "Iggy", "asdfasdf"
     post "/build/home:Iggy"
     assert_response 400
     post "/build/home:Iggy?cmd=say_hallo"
@@ -409,7 +410,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     post "/build/home:Iggy?cmd=wipe&package=DoesNotExist"
     assert_response 404
     assert_match(/unknown package: DoesNotExist/, @response.body)
-  
+
     post "/build/Apache?cmd=wipe"
     assert_response 403
     assert_match(/No permission to execute command on project/, @response.body)
@@ -424,7 +425,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     assert_response 403
     assert_match(/No permission to execute command on package/, @response.body)
 
-    prepare_request_with_user "fred", "geröllheimer" 
+    prepare_request_with_user "fred", "geröllheimer"
     post "/build/Apache?cmd=wipe"
     assert_response :success
     post "/build/Apache?cmd=wipe&package=apache2"
@@ -460,7 +461,7 @@ class BuildControllerTest < ActionController::IntegrationTest
 
     #valid
     reset_auth
-    prepare_request_with_user "adrian", "so_alone" 
+    prepare_request_with_user "adrian", "so_alone"
     get "/build/HiddenProject"
     assert_response :success
     assert_xml_tag :tag => "directory", :children =>  { :count => 1 }
@@ -488,7 +489,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     get "/build/RemoteInstance:BaseDistro/_result?view=summary"
     assert_response 404
   end
- 
+
   # FIXME: remoteinstance
 
   def test_jobhistory
