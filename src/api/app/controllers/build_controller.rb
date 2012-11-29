@@ -11,7 +11,7 @@ class BuildController < ApplicationController
     end
 
     if request.get?
-      pass_to_backend 
+      pass_to_backend
       return
     end
 
@@ -27,6 +27,8 @@ class BuildController < ApplicationController
 
   def project_index
     valid_http_methods :get, :post, :put
+
+    puts "METHOD PROJECT INDEX"
 
     prj = nil
     unless params[:project] == "_dispatchprios"
@@ -69,7 +71,7 @@ class BuildController < ApplicationController
           package_names = [params[:package]]
         end
         package_names.each do |pack_name|
-          pkg = Package.find_by_project_and_name( prj.name, pack_name ) 
+          pkg = Package.find_by_project_and_name( prj.name, pack_name )
           if pkg.nil?
             allowed = permissions.project_change? prj
             if not allowed
@@ -96,7 +98,7 @@ class BuildController < ApplicationController
 
       pass_to_backend
       return
-    elsif request.put? 
+    elsif request.put?
       if @http_user.is_admin?
         pass_to_backend
       else
@@ -208,7 +210,7 @@ class BuildController < ApplicationController
         'Transfer-Encoding' => 'binary',
         'Content-Length' => fsize
       )
-      
+
       render :status => 200, :text => Proc.new {|request,output|
         backend_request = Net::HTTP::Get.new(path)
         Net::HTTP.start(CONFIG['source_host'],CONFIG['source_port']) do |http|
