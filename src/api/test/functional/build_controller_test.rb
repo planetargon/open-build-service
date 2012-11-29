@@ -81,6 +81,7 @@ class BuildControllerTest < ActionController::IntegrationTest
     # put "/build/_dispatchprios", ' <dispatchprios> <prio project="KDE:Distro:Factory" repository="openSUSE_Factory" adjust="7" /> </dispatchprios>'
     # assert_response 403
 
+    reset_auth
     reset_test_info
     set_test(:test_file => 'build_controller_test.rb', :test => "test_dispatchprios", :line => 90)
     prepare_request_with_user "king", "sunflower"
