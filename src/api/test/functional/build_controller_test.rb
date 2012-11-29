@@ -52,6 +52,7 @@ class BuildControllerTest < ActionController::IntegrationTest
 
     prepare_request_with_user "king", "sunflower"
     post "/build/home:Iggy/10.2/i586/TestPack", nil
+    puts "LAST RESPONSE #{@response.inspect}"
     assert_response 400 # actually a success, it reached the backend
     assert_xml_tag :tag => "status", :attributes => { :code => "400", :origin => "backend" }
 
@@ -83,7 +84,6 @@ class BuildControllerTest < ActionController::IntegrationTest
 
     prepare_request_with_user "king", "sunflower"
     put "/build/_dispatchprios", ' <dispatchprios> <prio project="KDE:Distro:Factory" repository="openSUSE_Factory" adjust="7" /> </dispatchprios>'
-    puts "LAST RESPONSE #{last_response.body}"
     assert_response :success
   end
 
