@@ -1,12 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + "/..") + "/test_helper"
 require 'source_controller'
 
-class InterConnectTests < ActionController::IntegrationTest 
+class InterConnectTests < ActionController::IntegrationTest
 
   fixtures :all
-   
+
   def test_anonymous_access
-    reset_auth 
+    reset_auth
     get "/public/lastevents" # OBS 2.1
     assert_response :success
     assert_xml_tag :tag => "events", :attributes => {:sync => "lost"}
@@ -123,7 +123,7 @@ class InterConnectTests < ActionController::IntegrationTest
     put "/source/RemoteInstance/_meta", @response.body.dup
     assert_response :success
 
-    # cleanup     
+    # cleanup
     delete "/source/home:tom:testing"
     assert_response :success
   end
@@ -277,6 +277,7 @@ end
     xsrcmd5 = ret.linkinfo.xsrcmd5
     assert_not_nil xsrcmd5
     post "/source/LocalProject/remotepackage", :cmd => "showlinked"
+    puts "LAST RESPONSE IN interconnect test #{@response.inspect}"
     assert_response :success
     get "/source/LocalProject/remotepackage/_meta"
     assert_response :success
