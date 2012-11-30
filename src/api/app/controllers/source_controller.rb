@@ -83,6 +83,7 @@ class SourceController < ApplicationController
     #admin_user = @http_user.is_admin?
 
     puts "HTTP USER FOR INDEX PROJECT #{@http_user.inspect}"
+    puts "USER PERMISSIONS #{@user_permissions.inspect}"
 
     # GET /source/:project
     #---------------------
