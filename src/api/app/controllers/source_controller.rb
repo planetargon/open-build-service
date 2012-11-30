@@ -208,7 +208,14 @@ class SourceController < ApplicationController
     # POST /source/:project
     #----------------------
     elsif request.post?
+
+      puts "SOURCE CONTROLLER - IN POST CONDITION BRANCH"
+
       params[:user] = @http_user.login
+
+      puts "SOURCE CONTROLLER - PARAMS[:USER] #{params[:user].inspect}"
+
+      puts "SOURCE CONTROLLER COMMAND #{command.inspect}"
 
       # command: undelete
       if 'undelete' == command
@@ -248,6 +255,7 @@ class SourceController < ApplicationController
         # command: showlinked, set_flag, remove_flag, ...?
         dispatch_command
       else
+        puts "SOURCE CONTROLLER - IN ELSE THAT RENDERS A 403"
         render_error :status => 403, :errorcode => "cmd_execution_no_permission",
           :message => "no permission to execute command '#{command}'"
         return
@@ -257,6 +265,7 @@ class SourceController < ApplicationController
     # bad request
     #------------
     else
+      puts "SOURCE CONTROLLER - IN ELSE THAT RAISES AND ILLEGAL REQUEST ERROR"
       raise IllegalRequestError.new
     end
   end
