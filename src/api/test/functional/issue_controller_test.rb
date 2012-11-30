@@ -216,6 +216,7 @@ Blubber bnc#15\n
 
     prepare_request_with_user "Iggy", "asdfasdf"
     post "/source/BaseDistro/pack1", :cmd => "branch", :target_project => "home:Iggy:branches:BaseDistro"
+    puts "LAST RESPONSE #{@response.inspect}"
     assert_response :success
     put "/source/home:Iggy:branches:BaseDistro/pack1/file.changes", changes
     assert_response :success
