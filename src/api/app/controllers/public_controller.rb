@@ -37,7 +37,7 @@ class PublicController < ApplicationController
     valid_http_methods :get
     required_parameters :project
 
-    # project visible/known ? 
+    # project visible/known ?
     Project.get_by_name(params[:project])
 
     path = unshift_public(request.path)
@@ -50,7 +50,7 @@ class PublicController < ApplicationController
   def project_meta
     valid_http_methods :get
 
-    # project visible/known ? 
+    # project visible/known ?
     Project.get_by_name(params[:project])
 
     pass_to_backend unshift_public(request.path)
@@ -60,9 +60,9 @@ class PublicController < ApplicationController
   def project_index
     valid_http_methods :get
 
-    # project visible/known ? 
+    # project visible/known ?
     Project.get_by_name(params[:project])
-    
+
     path = unshift_public(request.path)
     path += "?expand=1&noorigins=1" # to stay compatible to OBS <2.4
     pass_to_backend path
@@ -73,7 +73,7 @@ class PublicController < ApplicationController
   def project_file
     valid_http_methods :get
 
-    # project visible/known ? 
+    # project visible/known ?
     Project.get_by_name(params[:project])
 
     path = unshift_public(request.path)
@@ -120,14 +120,21 @@ class PublicController < ApplicationController
   # GET /public/lastevents
   def lastevents
     valid_http_methods :get, :post   # OBS 2.3 switched to POST
-    
+
     path = unshift_public(request.path)
     if not request.query_string.blank?
-      path += "?#{request.query_string}" 
+      path += "?#{request.query_string}"
     elsif not request.env["rack.request.form_vars"].blank?
-      path += "?#{request.env["rack.request.form_vars"]}" 
+      path += "?#{request.env["rack.request.form_vars"]}"
     end
-    pass_to_backend path
+
+    puts "PATH #{path.inspect}"
+
+    begin
+      pass_to_backend path
+    rescue Exception => e
+      puts "EXCEPTION OCCURRED #{e.inspect}"
+    end
   end
 
   # GET /public/distributions

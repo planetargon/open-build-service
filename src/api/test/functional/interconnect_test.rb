@@ -8,6 +8,7 @@ class InterConnectTests < ActionController::IntegrationTest
   def test_anonymous_access
     reset_auth
     get "/public/lastevents" # OBS 2.1
+    puts "LAST RESPONSE IN interconnect test #{@response.inspect}"
     assert_response :success
     assert_xml_tag :tag => "events", :attributes => {:sync => "lost"}
     post "/public/lastevents?start=1"
