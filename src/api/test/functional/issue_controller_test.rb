@@ -219,8 +219,8 @@ Blubber bnc#15\n
     set_test(:test_file => 'issue_controller_test.rb', :test => "test_commit_file_to_linked_package", :line => 220)
     post "/source/BaseDistro/pack1", :cmd => "branch", :target_project => "home:Iggy:branches:BaseDistro"
     puts "LAST RESPONSE issue controller #{@response.inspect}"
-    assert_response :success
     reset_test_info
+    assert_response :success
     put "/source/home:Iggy:branches:BaseDistro/pack1/file.changes", changes
     assert_response :success
     post "/source/home:Iggy:branches:BaseDistro/pack1", :cmd => "branch", :target_project => "home:Iggy:branches:BaseDistro", :target_package => "pack_new"
