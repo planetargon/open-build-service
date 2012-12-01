@@ -76,6 +76,7 @@ class SourceController < ApplicationController
 
 
     if request.env['test_info']
+      puts "TEST INFO #{request.env['test_info'].inspect}"
       puts "SOURCE CONTROLLER PARAMS PROJECT #{params[:project].inspect}"
       puts "SOURCE CONTROLLER PARAMS CMD #{params[:cmd].inspect}"
     end
