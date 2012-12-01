@@ -73,17 +73,29 @@ class SourceController < ApplicationController
     # init and validation
     #--------------------
     valid_http_methods :get, :post, :delete
+
+
+    if request.env['test_info']
+      puts "SOURCE CONTROLLER PARAMS PROJECT #{params[:project].inspect}"
+      puts "SOURCE CONTROLLER PARAMS CMD #{params[:cmd].inspect}"
+    end
+
     valid_commands=["undelete", "showlinked", "remove_flag", "set_flag", "createpatchinfo", "createkey", "extendkey", "copy", "createmaintenanceincident", "unlock"]
     raise IllegalRequestError.new "invalid_project_name" unless valid_project_name?(params[:project])
     if params[:cmd]
+      if request.env['test_info'] && !valid_comments.include?(params[:cmd])
+        puts "SOURCE CONTROLLER COMMAND #{params[:cmd]} IS NOT A VALID COMMAND. WILL RAISE AN ILLEGAL REQUEST ERROR"
+      end
       raise IllegalRequestError.new "invalid_command" unless valid_commands.include?(params[:cmd])
       command = params[:cmd]
     end
     project_name = params[:project]
     #admin_user = @http_user.is_admin?
 
-    puts "HTTP USER FOR INDEX PROJECT #{@http_user.inspect}"
-    puts "USER PERMISSIONS #{@user_permissions.inspect}"
+    if request.env['test_info']
+      puts "HTTP USER FOR INDEX PROJECT #{@http_user.inspect}"
+      puts "USER PERMISSIONS #{@user_permissions.inspect}"
+    end
 
     # GET /source/:project
     #---------------------
@@ -209,13 +221,16 @@ class SourceController < ApplicationController
     #----------------------
     elsif request.post?
 
-      puts "SOURCE CONTROLLER - IN POST CONDITION BRANCH"
+      if request.env['test_info']
+        puts "SOURCE CONTROLLER - IN POST CONDITION BRANCH"
+      end
 
       params[:user] = @http_user.login
 
-      puts "SOURCE CONTROLLER - PARAMS[:USER] #{params[:user].inspect}"
-
-      puts "SOURCE CONTROLLER COMMAND #{command.inspect}"
+      if request.env['test_info']
+        puts "SOURCE CONTROLLER - PARAMS[:USER] #{params[:user].inspect}"
+        puts "SOURCE CONTROLLER COMMAND #{command.inspect}"
+      end
 
       # command: undelete
       if 'undelete' == command
@@ -255,7 +270,9 @@ class SourceController < ApplicationController
         # command: showlinked, set_flag, remove_flag, ...?
         dispatch_command
       else
-        puts "SOURCE CONTROLLER - IN ELSE THAT RENDERS A 403"
+        if request.env['test_info']
+          puts "SOURCE CONTROLLER - IN ELSE THAT RENDERS A 403"
+        end
         render_error :status => 403, :errorcode => "cmd_execution_no_permission",
           :message => "no permission to execute command '#{command}'"
         return
