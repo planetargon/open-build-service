@@ -220,6 +220,7 @@ Blubber bnc#15\n
     post "/source/BaseDistro/pack1", :cmd => "branch", :target_project => "home:Iggy:branches:BaseDistro"
     puts "LAST RESPONSE issue controller #{@response.inspect}"
     assert_response :success
+    reset_test_info
     put "/source/home:Iggy:branches:BaseDistro/pack1/file.changes", changes
     assert_response :success
     post "/source/home:Iggy:branches:BaseDistro/pack1", :cmd => "branch", :target_project => "home:Iggy:branches:BaseDistro", :target_package => "pack_new"
