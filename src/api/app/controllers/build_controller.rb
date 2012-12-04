@@ -107,10 +107,6 @@ class BuildController < ApplicationController
       end
 
       if @http_user.is_admin?
-        if request.env["test_info"].inspect
-          puts "HTTP USER IS AN ADMIN"
-        end
-
         begin
           pass_to_backend
         rescue Exception => e
