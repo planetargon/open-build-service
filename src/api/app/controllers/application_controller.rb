@@ -200,7 +200,11 @@ class ApplicationController < ActionController::API
     #   end
     # end
 
+    puts "IN EXTRACT USER"
+
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(CONFIG, request.env)
+
+    puts "AUTH ENGINE #{auth_engine.inspect}"
 
     render_error( :message => "Unknown user or invalid password", :status => 401 ) and return false unless auth_engine.engine
 
