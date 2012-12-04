@@ -24,7 +24,7 @@ module ActionController
       #   def index
       #     # return all users ...
       #   end
-      #   
+      #
       #   def edit
       #     if @request.put?
       #       # request data has already been validated here
@@ -40,6 +40,7 @@ module ActionController
 
     # This method should be called in the ApplicationController of your Rails app.
     def validate_xml_request
+      puts "IN VALIDATE XML REQUEST"
       opt = params()
       opt[:method] = request.method.to_s
       opt[:type] = "request"
@@ -49,7 +50,7 @@ module ActionController
 
     # This method should be called in the ApplicationController of your Rails app.
     def validate_xml_response
-      return if @skip_validation 
+      return if @skip_validation
       if request.format != "json" && response.status.to_s[0..2] == "200" && response.headers['Content-Type'] !~ /.*\/json/i && response.headers["Content-Disposition"] != "attachment"
         opt = params()
         opt[:method] = request.method.to_s
@@ -73,7 +74,7 @@ end
 
 module Suse
   class ValidationError < Exception; end
-  
+
   class Validator
     @schema_location = CONFIG['schema_location']
 
