@@ -74,6 +74,8 @@ class SourceController < ApplicationController
     #--------------------
     valid_http_methods :get, :post, :delete
 
+    puts "SOURCE CONTROLER IN INDEX PROJECT"
+
     if request.env['test_info']
       puts "TEST INFO #{request.env['test_info'].inspect}"
       puts "SOURCE CONTROLLER PARAMS PROJECT #{params[:project].inspect}"
