@@ -218,9 +218,9 @@ Blah bnc#14\n
 Blubber bnc#15\n
 "
 
-    prepare_request_with_user "Iggy", "asdfasdf"
     reset_test_info
     set_test(:test_file => 'issue_controller_test.rb', :test => "test_commit_file_to_linked_package", :line => 220)
+    prepare_request_with_user "Iggy", "asdfasdf"
     post "/source/BaseDistro/pack1", :cmd => "branch", :target_project => "home:Iggy:branches:BaseDistro"
     puts "LAST RESPONSE issue controller #{@response.inspect}"
     assert_response :success
