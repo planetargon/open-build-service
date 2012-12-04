@@ -210,6 +210,9 @@ class ApplicationController < ActionController::API
 
     @http_user, message = auth_engine.authenticate
 
+    puts "HTTP USER #{@http_user.inspect}"
+    puts "MESSAGE #{message.inspect}"
+
     if @http_user.nil? && auth_engine.is_a?(Opensuse::Authentication::IchainEngine) && auth_engine.user_login
       if CONFIG['new_user_registration'] == "deny"
         logger.debug( "No user found in database, creation disabled" )
@@ -264,8 +267,6 @@ class ApplicationController < ActionController::API
         return true
       end
     end
-
-    puts "HTTP USER IS #{@http_user.inspect}"
 
     render_error :message => "User is registered but not in confirmed state.", :status => 403,
       :errorcode => "inactive_user",
