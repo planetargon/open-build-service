@@ -261,6 +261,8 @@ class ApplicationController < ActionController::API
       end
     end
 
+    puts "HTTP USER IS #{@http_user.inspect}"
+
     render_error :message => "User is registered but not in confirmed state.", :status => 403,
       :errorcode => "inactive_user",
       :details => "<p>Your account is a registered account, but it is in a not active state.</p>"
