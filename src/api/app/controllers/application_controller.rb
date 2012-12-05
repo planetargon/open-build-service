@@ -280,6 +280,7 @@ class ApplicationController < ActionController::API
     # initialize backend on every request
     Suse::Backend.source_host = CONFIG['source_host']
     Suse::Backend.source_port = CONFIG['source_port']
+    puts "IN METHOD SETUP BACKEND"
   end
 
   hide_action :add_api_version
