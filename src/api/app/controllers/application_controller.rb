@@ -50,6 +50,7 @@ class ApplicationController < ActionController::API
   protected
   def set_current_user
     User.current = @http_user
+    puts "IN METHOD SET CURRENT USER"
   end
 
   def require_admin
@@ -77,8 +78,10 @@ class ApplicationController < ActionController::API
   end
 
   def validate_params
+    puts "IN METHOD VALIDATE PARAMS"
     params.each do |p|
       if not p[1].nil? and p[1].class != String
+        puts "RAISING INVALID PARAMETER ERROR: Parameter #{p[0]} has non String class #{p[1].class}"
         raise InvalidParameterError, "Parameter #{p[0]} has non String class #{p[1].class}"
       end
     end
@@ -706,6 +709,7 @@ class ApplicationController < ActionController::API
   private
   def shutup_rails
     Rails.cache.silence!
+    puts "IN SHUTUP RAILS"
   end
 
   def action_fragment_key( options )
