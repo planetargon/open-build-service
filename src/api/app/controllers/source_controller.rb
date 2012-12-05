@@ -1918,7 +1918,11 @@ class SourceController < ApplicationController
 
   # POST /source/<project>/<package>?cmd=branch&target_project="optional_project"&target_package="optional_package"&update_project_attribute="alternative_attribute"&comment="message"
   def index_package_branch
+    puts "IN METHOD INDEX PACKAGE BRANCH"
     ret = do_branch params
+
+    puts "RETURN VALUE INDEX PACKAGE BRANCH #{ret.inspect}"
+
     if ret[:status] == 200
       if ret[:text]
         render ret
