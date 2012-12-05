@@ -673,7 +673,11 @@ class ApplicationController < ActionController::API
     cmd_handler = "#{params[:action]}_#{params[opt[:cmd_param]]}"
     logger.debug "dispatch_command: trying to call method '#{cmd_handler}'"
 
+    puts "DISPATCH COMMAND TRYING TO CALL METHOD #{cmd_handler}"
+
     if not self.respond_to? cmd_handler, true
+      puts "SELF #{self.inspect} doesn't respond to #{cmd_handler}"
+      puts "Unknown command '#{params[opt[:cmd_param]]}' for path #{request.path}"
       render_error :status => 400, :errorcode => "unknown_command",
         :message => "Unknown command '#{params[opt[:cmd_param]]}' for path #{request.path}"
       return
