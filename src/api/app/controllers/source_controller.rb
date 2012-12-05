@@ -310,6 +310,8 @@ class SourceController < ApplicationController
     # list of cammands which create the target package
     package_creating_commands = ['branch', 'copy', 'undelete']
 
+    puts "WILL RAISE INVALID PROJECT NAME" unless valid_project_name?(params[:project])
+
     raise IllegalRequestError.new "invalid_project_name" unless valid_project_name?(params[:project])
     if params[:cmd]
       raise IllegalRequestError.new "invalid_command" unless valid_commands.include?(params[:cmd])
@@ -507,6 +509,7 @@ class SourceController < ApplicationController
     # POST /source/:project/:package
     #-------------------------------
     elsif request.post?
+      puts "IN REQUEST POST ELSE IF BLOCK"
 
       dispatch_command
 
