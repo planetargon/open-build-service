@@ -44,7 +44,7 @@ module MaintenanceHelper
     mi = nil
     tprj = nil
     Project.transaction do
-      mi = MaintenanceIncident.new( :maintenance_db_project => maintenanceProject ) 
+      mi = MaintenanceIncident.new( :maintenance_db_project => maintenanceProject )
       tprj = Project.new :name => mi.project_name
       if baseProject
         # copy as much as possible from base project
@@ -65,14 +65,14 @@ module MaintenanceHelper
         tprj.flags.create( :flag => 'access', :status => "disable" )
       end
       # take over roles from maintenance project
-      maintenanceProject.project_user_role_relationships.each do |r| 
+      maintenanceProject.project_user_role_relationships.each do |r|
         ProjectUserRoleRelationship.create(
               :user => r.user,
               :role => r.role,
               :project => tprj
             )
       end
-      maintenanceProject.project_group_role_relationships.each do |r| 
+      maintenanceProject.project_group_role_relationships.each do |r|
         ProjectGroupRoleRelationship.create(
               :group => r.group,
               :role => r.role,
@@ -134,11 +134,11 @@ module MaintenanceHelper
         else
           package_name = pkg.name
         end
-        
+
         branch_params = { :target_project => incidentProject.name,
-                          :maintenance => 1, 
-                          :force => 1, 
-                          :comment => "Initial new branch", 
+                          :maintenance => 1,
+                          :force => 1,
+                          :comment => "Initial new branch",
                           :project => releaseproject, :package => package_name }
         branch_params[:requestid] = request.id if request
         # it is fine to have new packages
@@ -150,13 +150,13 @@ module MaintenanceHelper
 
       # use link target as fallback
       elsif e and not e.attributes["missingok"]
-        # linked to an existing package in an external project 
+        # linked to an existing package in an external project
         linked_project = e.attributes["project"]
         linked_package = e.attributes["package"]
 
         branch_params = { :target_project => incidentProject.name,
-                          :maintenance => 1, 
-                          :force => 1, 
+                          :maintenance => 1,
+                          :force => 1,
                           :project => linked_project, :package => linked_package }
         branch_params[:requestid] = request.id if request
         ret = do_branch branch_params
@@ -219,7 +219,7 @@ module MaintenanceHelper
     end
 
     # get updateinfo id in case the source package comes from a maintenance project
-    mi = MaintenanceIncident.find_by_db_project_id( sourcePackage.db_project_id ) 
+    mi = MaintenanceIncident.find_by_db_project_id( sourcePackage.db_project_id )
     updateinfoId = nil
     if mi
       id_template = nil
@@ -363,6 +363,8 @@ module MaintenanceHelper
     # name of 1) may get used in package or repo names when using :extend_name
     #
 
+    puts "IN METHOD DO BRANCH"
+
     # set defaults
     unless params[:attribute]
       params[:attribute] = "OBS:Maintained"
@@ -439,7 +441,7 @@ module MaintenanceHelper
       else
         pkg = Package.get_by_project_and_name params[:project], params[:package]
         unless prj.class == Project and prj.find_attribute("OBS", "BranchTarget")
-          prj = pkg.project if pkg 
+          prj = pkg.project if pkg
         end
       end
       tpkg_name = params[:target_package]
@@ -572,7 +574,7 @@ module MaintenanceHelper
           # extend parameter given
           p[:target_package] += ".#{p[:link_target_project].name}" if extend_names
         end
-   
+
         # validate and resolve devel package or devel project definitions
         unless params[:ignoredevel] or p[:copy_from_devel]
 
@@ -598,14 +600,14 @@ module MaintenanceHelper
                 logger.error "read permission or data inconsistency, backend delivered package as linked package where no database object exists: #{e.attributes["project"]} / #{e.attributes["name"]}"
               else
                 # is incident ?
-                if ipkg.project.project_type == "maintenance_incident" 
+                if ipkg.project.project_type == "maintenance_incident"
                   # is a newer incident ?
                   if incident_pkg.nil? or ipkg.project.name.gsub(/.*:/,'').to_i > incident_pkg.project.name.gsub(/.*:/,'').to_i
                     incident_pkg = ipkg
                   end
                 end
               end
-            end  
+            end
             if incident_pkg
               p[:copy_from_devel] = incident_pkg
               logger.info "sources will get copied from incident package #{p[:copy_from_devel].project.name}/#{p[:copy_from_devel].name}"
@@ -664,7 +666,7 @@ module MaintenanceHelper
           if innerp.length == 1
             ap = innerp.first
           end
-          
+
           target_package = ap.name
           target_package += "." + p[:target_package].gsub(/^[^\.]*\./,'') if extend_names
 
@@ -710,7 +712,7 @@ module MaintenanceHelper
               builder.target(:project => target_project, :package => p[:target_package])
             end
           else
-            builder.package(:project => p[:link_target_project], :package => p[:package]) do 
+            builder.package(:project => p[:link_target_project], :package => p[:package]) do
               builder.target(:project => target_project, :package => p[:target_package])
             end
           end
