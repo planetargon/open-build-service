@@ -293,6 +293,7 @@ class SourceController < ApplicationController
   # /source/:project/:package
   #--------------------------
   def index_package
+    puts "IN METHOD INDEX PACKAGE"
     # init and validation
     #--------------------
     valid_http_methods :get, :delete, :post
