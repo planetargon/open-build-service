@@ -262,6 +262,7 @@ class ApplicationController < ActionController::API
       end
 
       if @http_user.state == User.states['confirmed']
+        puts "USER FOUND #{@http_user.login}. Will return true"
         logger.debug "USER found: #{@http_user.login}"
         @user_permissions = Suse::Permission.new( @http_user )
         return true
