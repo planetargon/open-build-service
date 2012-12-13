@@ -12,7 +12,7 @@ class HttpBasicEngineTest < ActiveSupport::TestCase
   end
 
   def test_returns_nil_when_read_only_hosts_do_not_match_environment_hosts
-    @configuration['read_only_hosts'] = 'test_host'
+    ApplicationSettings::AuthReadOnlyHosts.set!('test_host')
     @environment['REMOTE_HOST'] = 'my_web_host'
     @environment['REMOTE_ADDR'] = '192.168.1.1'
 
@@ -26,7 +26,7 @@ class HttpBasicEngineTest < ActiveSupport::TestCase
   end
 
   def test_returns_nil_if_the_user_agent_is_not_obs
-    @configuration['read_only_hosts'] = 'test_host'
+    ApplicationSettings::AuthReadOnlyHosts.set!('test_host')
     @environment['REMOTE_HOST'] = 'test_host'
     auth_engine = Opensuse::Authentication::HttpBasicEngine.new(@configuration, @environment)
 
@@ -36,8 +36,8 @@ class HttpBasicEngineTest < ActiveSupport::TestCase
   def test_returns_a_nobdy_user_when_the_user_agent_is_obs_webui
     user = User.find_by_login("_nobody_")
 
-    @configuration['read_only_hosts'] = 'test_host'
-    @configuration['allow_anonymous'] = true
+    ApplicationSettings::AuthReadOnlyHosts.set!('test_host')
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
     @environment['REMOTE_HOST'] = 'test_host'
     @environment['HTTP_USER_AGENT'] = 'obs-webui'
     @environment['REMOTE_HOST'] = 'test_host'
@@ -50,8 +50,8 @@ class HttpBasicEngineTest < ActiveSupport::TestCase
   def test_returns_a_nobdy_user_when_the_user_agent_is_obs_software
     user = User.find_by_login("_nobody_")
 
-    @configuration['read_only_hosts'] = 'test_host'
-    @configuration['allow_anonymous'] = true
+    ApplicationSettings::AuthReadOnlyHosts.set!('test_host')
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
     @environment['REMOTE_HOST'] = 'test_host'
     @environment['HTTP_USER_AGENT'] = 'obs-software'
     @environment['REMOTE_HOST'] = 'test_host'
@@ -62,7 +62,7 @@ class HttpBasicEngineTest < ActiveSupport::TestCase
   end
 
   def test_returns_a_database_user_when_allow_anonymous_is_false
-    @configuration['allow_anonymous'] = false
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
 
     user = User.create(:login => "Joe", :password => "MyPassword", :password_confirmation => "MyPassword", :email => "joe@example.com")
     @environment['X-HTTP_AUTHORIZATION'] = "Basic #{Base64.encode64('Joe:MyPassword')}"
@@ -73,8 +73,8 @@ class HttpBasicEngineTest < ActiveSupport::TestCase
   end
 
   def test_returns_a_nobody_user_when_allow_anonymous_is_true_but_there_is_a_database_user
-    @configuration['allow_anonymous'] = true
-    @configuration['read_only_hosts'] = 'test_host'
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
+    ApplicationSettings::AuthReadOnlyHosts.set!('test_host')
     @environment['REMOTE_HOST'] = 'test_host'
     @environment['HTTP_USER_AGENT'] = 'obs-software'
     @environment['REMOTE_HOST'] = 'test_host'

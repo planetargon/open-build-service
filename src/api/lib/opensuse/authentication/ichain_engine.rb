@@ -12,13 +12,13 @@ module Opensuse
       end
 
       def authenticate
-        mode = [configuration['ichain_mode'], configuration['proxy_auth_mode']].compact.uniq.last
+        mode = [ApplicationSettings::AuthIchainMode.get.value, ApplicationSettings::AuthProxyMode.get.value].compact.uniq.last
         proxy_user = environment['HTTP_X_USERNAME']
 
         if proxy_user
           logger.send :info, "iChain user extracted from header: #{proxy_user}"
         elsif mode == :simulate
-          proxy_user = configuration['proxy_auth_test_user']
+          proxy_user = ApplicationSettings::AuthProxyUser.get.value
           logger.send :debug, "iChain user extracted from config: #{proxy_user}"
         end
 
@@ -31,7 +31,7 @@ module Opensuse
         if proxy_user
           user = User.find_by_login proxy_user
         else
-          if configuration['allow_anonymous']
+          if ApplicationSettings::AuthAllowAnonymous.get.value
             user = User.find_by_login("_nobody_")
           end
         end

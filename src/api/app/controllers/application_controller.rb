@@ -66,7 +66,7 @@ class ApplicationController < ActionController::API
 
   def extract_user_public
     # to become _public_ special user
-    if CONFIG['allow_anonymous']
+    if ApplicationSettings::AuthAllowAnonymous.get.value
       @http_user = User.find_by_login( "_nobody_" )
       @user_permissions = Suse::Permission.new( @http_user )
       return true
@@ -130,7 +130,7 @@ class ApplicationController < ActionController::API
     #     # update user data from login proxy headers
     #     @http_user.update_user_info_from_proxy_env(request.env) unless @http_user.nil?
     #   else
-    #     if CONFIG['allow_anonymous']
+    #     if ApplicationSettings::AuthAllowAnonymous.get.value
     #       @http_user = User.find_by_login( "_nobody_" )
     #       @user_permissions = Suse::Permission.new( @http_user )
     #       return true
@@ -161,7 +161,7 @@ class ApplicationController < ActionController::API
     #     #set password to the empty string in case no password is transmitted in the auth string
     #     passwd ||= ""
     #   else
-    #     if @http_user.nil? and CONFIG['allow_anonymous']
+    #     if @http_user.nil? and ApplicationSettings::AuthAllowAnonymous.get.value
     #       read_only_hosts = []
     #       read_only_hosts = CONFIG['read_only_hosts'] if CONFIG['read_only_hosts']
     #       read_only_hosts << CONFIG['webui_host'] if CONFIG['webui_host'] # this was used in config files until OBS 2.1

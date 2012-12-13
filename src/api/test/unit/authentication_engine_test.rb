@@ -7,47 +7,45 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_crowd_engine_set_to_on
-    @config['crowd_authentication'] = :on
-    @config['crowd_server'] = '192.168.1.1'
-    @config['crowd_app_name'] = 'obs-api'
-    @config['crowd_app_password'] = 'password'
+    ApplicationSettings::AuthCrowdMode.set!(true)
+    ApplicationSettings::AuthCrowdServer.set!('192.168.1.1')
+    ApplicationSettings::AuthCrowdAppName.set!('obs-api')
+    ApplicationSettings::AuthCrowdAppPassword.set!('password')
 
     @environment['Authorization'] = 'Joe'
-
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
     assert_equal "Opensuse::Authentication::CrowdEngine", auth_engine.engine.class.to_s
   end
 
   def test_ichain_engine_set_to_on
-    @config['ichain_mode'] = :on
+    ApplicationSettings::AuthIchainMode.set!('on')
 
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
     assert_equal "Opensuse::Authentication::IchainEngine", auth_engine.engine.class.to_s
   end
 
   def test_ichain_engine_set_to_simulate
-    @config['ichain_mode'] = :simulate
-
+    ApplicationSettings::AuthIchainMode.set!('simulate')
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
     assert_equal "Opensuse::Authentication::IchainEngine", auth_engine.engine.class.to_s
   end
 
   def test_ichain_engine_set_to_off
-    @config['ichain_mode'] = :off
+    ApplicationSettings::AuthIchainMode.set!('off')
 
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
     assert_equal "NilClass", auth_engine.engine.class.to_s
   end
 
   def test_ichain_engine_set_to_nothing
-    @config['ichain_mode'] = ''
+    ApplicationSettings::AuthIchainMode.set!('')
 
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
     assert_equal "NilClass", auth_engine.engine.class.to_s
   end
 
   def test_http_basic_engine_x_http_authorization_header
-    @config['allow_anonymous'] = true
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
 
     @environment['X-HTTP-Authorization'] = 'Joe'
 
@@ -56,7 +54,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_http_basic_engine_authorization_header
-    @config['allow_anonymous'] = true
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
 
     @environment['Authorization'] = 'Joe'
 
@@ -65,7 +63,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_http_basic_engine_http_authorization_header
-    @config['allow_anonymous'] = true
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
 
     @environment['HTTP_AUTHORIZATION'] = 'Joe'
 
@@ -74,7 +72,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_http_basic_engine_http_non_anonymous
-    @config['allow_anonymous'] = false
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
 
     @environment['HTTP_AUTHORIZATION'] = 'Joe'
 
@@ -83,6 +81,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_ldap_engine_x_http_authorization_header_ldap_mode_on
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
     ApplicationSettings::LdapMode.set!(true)
 
     @environment['X-HTTP-Authorization'] = 'Joe'
@@ -93,6 +92,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_ldap_engine_authorization_header_ldap_mode_on
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
     ApplicationSettings::LdapMode.set!(true)
 
     @environment['Authorization'] = 'Joe'
@@ -102,6 +102,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_ldap_engine_http_authorization_header_ldap_mode_on
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
     ApplicationSettings::LdapMode.set!(true)
 
     @environment['HTTP_AUTHORIZATION'] = 'Joe'
@@ -111,6 +112,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_ldap_engine_ldap_mode_off
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
     ApplicationSettings::LdapMode.set!(false)
 
     @environment['HTTP_AUTHORIZATION'] = 'Joe'
@@ -127,6 +129,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_credentials_engine_authorization_header
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
     @environment['Authorization'] = 'Joe'
 
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)
@@ -134,6 +137,7 @@ class AuthenticationEngineTest < ActiveSupport::TestCase
   end
 
   def test_credentials_engine_x_http_authorization_header
+    ApplicationSettings::AuthAllowAnonymous.set!(false)
     @environment['HTTP_AUTHORIZATION'] = 'Joe'
 
     auth_engine = Opensuse::Authentication::AuthenticationEngine.new(@config, @environment)

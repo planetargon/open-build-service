@@ -19,14 +19,14 @@ module Opensuse
 
       private
         def determine_engine
-          if configuration['crowd_authentication'] == :on && configuration['crowd_server'] && configuration['crowd_app_name'] && configuration['crowd_app_password'] &&
+          if ApplicationSettings::AuthCrowdMode.get.value && ApplicationSettings::AuthCrowdServer.get.value && ApplicationSettings::AuthCrowdAppName.get.value && ApplicationSettings::AuthCrowdAppPassword.get.value &&
             environment_contains_valid_headers?
             Opensuse::Authentication::CrowdEngine.new(configuration, environment)
-          elsif [:on, :simulate].include?([configuration['ichain_mode'], configuration['proxy_auth_mode']].compact.uniq.last)
+          elsif ['on', 'simulate'].include?([ApplicationSettings::AuthIchainMode.get.value, ApplicationSettings::AuthProxyMode.get.value].reject { |v| v.blank? }.uniq.last)
             Opensuse::Authentication::IchainEngine.new(configuration, environment)
-          elsif environment_contains_valid_headers? && configuration['allow_anonymous']
+          elsif environment_contains_valid_headers? && ApplicationSettings::AuthAllowAnonymous.get.value
             Opensuse::Authentication::HttpBasicEngine.new(configuration, environment)
-          elsif environment_contains_valid_headers? && configuration['ldap_mode'] == :on
+          elsif environment_contains_valid_headers? && ApplicationSettings::LdapMode.get.value
             Opensuse::Authentication::LdapEngine.new(configuration, environment)
           elsif environment_contains_valid_headers?
             Opensuse::Authentication::CredentialsEngine.new(configuration, environment)

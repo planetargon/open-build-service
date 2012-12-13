@@ -2,6 +2,11 @@ require 'ldap'
 
 module Suse
   class Ldap
+    def self.enabled?
+      # LDAP mode enabled for authentication?
+      ApplicationSettings::LdapMode.get.value
+    end
+
     def self.servers
       # Colon-separated list of LDAP servers, one of which is selected randomly during a connection
       ApplicationSettings::LdapServers.get.value
@@ -34,11 +39,6 @@ module Suse
     def self.referrals?
       # Enabled for authentication with Windows 2003 AD
       ApplicationSettings::LdapReferrals.get.value
-    end
-
-    def self.enabled?
-      # LDAP mode enabled? All other LDAP options rely upon this.
-      ApplicationSettings::LdapMode.get.value
     end
 
     def self.entry_base
@@ -145,6 +145,13 @@ module Suse
 
     # Populates db-based config model with LDAP details from config file
     def self.migrate_config_file_to_application_settings!
+      ApplicationSettings::AuthIchainMode.init(CONFIG['ichain_mode'])
+      ApplicationSettings::AuthProxyMode.init(CONFIG['proxy_auth_mode'])
+      ApplicationSettings::AuthProxyUser.init(CONFIG['proxy_auth_test_user'])
+      ApplicationSettings::AuthAllowAnonymous.init(CONFIG['allow_anonymous'])
+      ApplicationSettings::AuthReadOnlyHosts.init(CONFIG['read_only_hosts'])
+      ApplicationSettings::AuthWebuiHost.init(CONFIG['webui_host'])
+
       ApplicationSettings::LdapServers.init(CONFIG['ldap_servers'] == :on)
       ApplicationSettings::LdapPort.init(CONFIG['ldap_port'] || 389)
       ApplicationSettings::LdapMaximumAttempts.init(CONFIG['ldap_max_attempts'])

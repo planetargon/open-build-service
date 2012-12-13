@@ -46,7 +46,7 @@ if ($frontend) {
 
 our $obsname = $hostname; # unique identifier for this Build Service instance
 # Change also the SLP reg files in /etc/slp.reg.d/ when you touch hostname or port
-our $srcserver = "http://$hostname:3200";
+our $srcserver = "http://$hostname:5352";
 our $reposerver = "http://$hostname:3201";
 our $serviceserver = "http://$hostname:3202";
 our $servicedir = '/Users/garyblessington/dev/open-build-service/src/api/test/fixtures/backend/services';
@@ -126,14 +126,15 @@ our $relsync_pool = {
  "mips64" => "mips",
  "mipsel" => "mipsel",
  "mips64el" => "mipsel",
+ "aarch64"  => "arm",
  "armv4l"  => "arm",
  "armv5l"  => "arm",
  "armv6l"  => "arm",
  "armv7l"  => "arm",
+ "armv7hl" => "arm",
  "armv5el" => "armv5el", # they do not exist
  "armv6el" => "armv6el",
  "armv7el" => "armv7el",
- "armv7hl" => "armv7hl",
  "armv8el" => "armv8el",
  "sparcv9" => "sparcv9",
  "sparc64" => "sparcv9",

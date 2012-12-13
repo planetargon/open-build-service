@@ -31,7 +31,7 @@ class IchainEngineTest < ActiveSupport::TestCase
   def test_returns_a_nobody_user_if_allow_anonymous_is_set_and_no_proxy_user_is_defined
     user = User.find_by_login("_nobody_")
 
-    @configuration['allow_anonymous'] = true
+    ApplicationSettings::AuthAllowAnonymous.set!(true)
     auth_engine = Opensuse::Authentication::IchainEngine.new(@configuration, @environment)
     assert_equal user, auth_engine.authenticate
   end
