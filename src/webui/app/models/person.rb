@@ -88,11 +88,13 @@ class Person < ActiveXML::Node
 
   def refresh_cached_groups!
     # Force a re-caching of this user's groups in the API (User.accessible_groups)
-    transport ||= ActiveXML::transport
-    transport.direct_http URI("/group/refresh_cached_groups?login=#{ login }"), :method => "PUT"
+    begin
+      transport ||= ActiveXML::transport
+      transport.direct_http URI("/group/refresh_cached_groups?login=#{ login }"), :method => "PUT"
 
-    # Delete cached groups content for groups index page
-    Rails.cache.delete_matched("group_list_#{ login }")
+      # Delete cached groups content for groups index page
+      Rails.cache.delete_matched("group_list_#{ login }")
+    end
   end
 
   def involved_projects
