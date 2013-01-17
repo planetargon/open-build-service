@@ -51,3 +51,6 @@ if File.exists? fname
 else
   STDERR.puts "Custom test.#{Socket.gethostname}.rb not found - using defaults"
 end
+
+ApplicationSettings::AuthAllowAnonymous.set!(true)
+ApplicationSettings::AuthReadOnlyHosts.set!(['127.0.0.1', '::1'])
