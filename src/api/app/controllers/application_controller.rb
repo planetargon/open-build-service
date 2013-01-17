@@ -208,12 +208,12 @@ class ApplicationController < ActionController::API
 
     @http_user, message = auth_engine.authenticate
 
-    if !@http_user.nil? && auth_engine.is_a?(Opensuse::Authentication::AnonymousEngine)
+    if !@http_user.nil? && auth_engine.engine.is_a?(Opensuse::Authentication::AnonymousEngine)
       @user_permissions = Suse::Permission.new(@http_user)
       return true
     end
 
-    if @http_user.nil? && auth_engine.is_a?(Opensuse::Authentication::IchainEngine) && auth_engine.user_login
+    if @http_user.nil? && auth_engine.engine.is_a?(Opensuse::Authentication::IchainEngine) && auth_engine.user_login
       if CONFIG['new_user_registration'] == "deny"
         logger.debug( "No user found in database, creation disabled" )
         message = "User 'CONFG' does not exist"
@@ -233,7 +233,7 @@ class ApplicationController < ActionController::API
       @http_user.update_user_info_from_proxy_env(request.env) unless @http_user.nil?
     end
 
-    if @http_user.nil? && auth_engine.is_a?(Opensuse::Authentication::LdapEngine) && auth_engine.user_login
+    if @http_user.nil? && auth_engine.engine.is_a?(Opensuse::Authentication::LdapEngine) && auth_engine.user_login
       if auth_engine.user_ldap_info.blank?
         rails.logger.debug("User not found with LDAP, falling back to database")
         auth_engine = Opensuse::Authentication::CredentialsEngine.new(CONFIG, request.env)
