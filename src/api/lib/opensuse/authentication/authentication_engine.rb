@@ -24,12 +24,12 @@ module Opensuse
             Opensuse::Authentication::CrowdEngine.new(configuration, environment)
           elsif ['on', 'simulate'].include?([ApplicationSettings::AuthIchainMode.get.value, ApplicationSettings::AuthProxyMode.get.value].reject { |v| v.blank? }.uniq.last)
             Opensuse::Authentication::IchainEngine.new(configuration, environment)
-          elsif environment_contains_valid_headers? && ApplicationSettings::AuthAllowAnonymous.get.value
-            Opensuse::Authentication::HttpBasicEngine.new(configuration, environment)
           elsif environment_contains_valid_headers? && ApplicationSettings::LdapMode.get.value
             Opensuse::Authentication::LdapEngine.new(configuration, environment)
           elsif environment_contains_valid_headers?
             Opensuse::Authentication::CredentialsEngine.new(configuration, environment)
+          elsif ApplicationSettings::AuthAllowAnonymous.get.value
+            Opensuse::Authentication::AnonymousEngine.new(configuration, environment)
           end
         end
 
