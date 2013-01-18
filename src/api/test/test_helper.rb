@@ -12,6 +12,10 @@ require 'webmock/minitest'
 
 WebMock.disable_net_connect!(allow: CONFIG['source_host'])
 
+CONFIG['allow_anonymous'] = true
+ApplicationSettings::AuthAllowAnonymous.set!(true)
+ApplicationSettings::AuthReadOnlyHosts.set!(['127.0.0.1', '::1'])
+
 # uncomment to enable tests which currently are known to fail, but where either the test
 # or the code has to be fixed
 #$ENABLE_BROKEN_TEST=true
@@ -77,12 +81,12 @@ module ActionController
   end
 
   class IntegrationTest
- 
+
     def teardown
       Rails.cache.clear
       reset_auth
     end
-    
+
     @@auth = nil
 
     def reset_auth
